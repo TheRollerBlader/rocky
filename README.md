@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rocky 1
 
-## Getting Started
+A scratch-built competition rocket for the American Rocketry Challenge 2027. Two eggs, an 800-foot target, and a flight that has to land between 37 and 40 seconds.
 
-First, run the development server:
+**Live site:** [rocky-rocketry.netlify.app](https://rocky-rocketry.netlify.app)
+
+The site is the walkthrough: the model, the parts, and the flight card. This repository is the design behind it. The airframe is in `public/rocky.glb`. The OpenRocket file is in `openrocket/rocky.ork`.
+
+## Airframe
+
+Overall length is 765 mm. The upper tube is a BT-80. The booster is a BT-60. Nose and transition are molded plastic. Fins are three pieces of 3/16 in balsa, through the wall onto the motor tube.
+
+![Rocky 1 side view](docs/diagrams/side-view.svg)
+
+| Section | Size |
+| --- | --- |
+| Nose | 150 mm ogive, 45 mm shoulder, 66.04 mm base |
+| Payload tube | BT-80, 66.04 mm OD, 400 mm |
+| Transition | 65 mm, 66.04 mm down to 41.58 mm |
+| Booster | BT-60, 41.58 mm OD, 150 mm |
+| Motor | AeroTech F44W-8, 24 × 70 mm single-use |
+| Recovery | 18.5 in flat ripstop circle |
+
+![One fin](docs/diagrams/fin.svg)
+
+Paint on the site matches the model: white payload, black transition, graphite booster, blue nose and fins.
+
+## Simulations
+
+The flights are OpenRocket simulations. The website does not invent them.
+
+Five flights are already saved in `openrocket/rocky.ork`, all at 60 °F on a six-foot rod. To run them at the same time:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+python3 -m pip install -r simulations/requirements.txt
+python3 -m orlab fetch
+python3 simulations/run.py
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`run.py` starts one OpenRocket engine per flight, so the five cases fly together. You need Python 3.10+ and a JDK 17 or 21. The first `orlab fetch` downloads the OpenRocket engine and checks its checksum.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+List the saved flights without flying them:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+python3 simulations/run.py --list
+```
 
-## Learn More
+Results are written to `simulations/results/summary.csv`. That folder stays off git. Open `rocky.ork` in the OpenRocket application if you want to change ballast, wind, or the chute and save a new flight.
 
-To learn more about Next.js, take a look at the following resources:
+## Site
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The 3D model is generated from the STEP file with `npm run convert-rocket`. The published build is the page linked above.

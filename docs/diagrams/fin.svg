@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 420" role="img" aria-label="One Rocky fin, root 130 millimeters, tip 65, span 70">
+  <rect width="560" height="420" fill="#0b0d10"/>
+  <g transform="translate(70 70) scale(2.2)" fill="#0083E0" stroke="#d7ecff" stroke-width="0.6">
+    <polygon points="0,0 130,0 130,69.75 65,69.75"/>
+  </g>
+  <g fill="#c8d0da" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">
+    <text x="28" y="36" fill="#f5f5f7" font-size="16">One fin · balsa, 3/16 in</text>
+    <text x="70" y="64">Root 130 mm</text>
+    <text x="360" y="250">Span 69.75 mm</text>
+    <text x="250" y="250">Tip 65 mm</text>
+    <text x="28" y="390">Leading edge sweeps 65 mm. Trailing edge is straight. Three fins, through the wall to the motor tube.</text>
+  </g>
+</svg>

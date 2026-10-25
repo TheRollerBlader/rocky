@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local Netlify folder
+.netlify
+
+# Local page captures
+/screenshot_*.png
+/snap_*.png
+/public/rocky-charts.png
+
+# OpenRocket output from simulations/run.py
+/simulations/results/

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 320" role="img" aria-label="Rocky 1 side view, nose to the right, 765 millimeters overall">
+  <rect width="920" height="320" fill="#0b0d10"/>
+  <text x="36" y="32" fill="#f5f5f7" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16">Rocky 1 · side view</text>
+  <text x="36" y="52" fill="#9aa3ad" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">765 mm overall. Nose to the right.</text>
+  <g transform="translate(48 132)" fill="none" stroke="#d7ecff" stroke-linejoin="round" stroke-width="1">
+    <rect x="0" y="-20.8" width="150" height="41.6" fill="#2c3138"/>
+    <path d="M150 -20.8 L215 -33 L215 33 L150 20.8 Z" fill="#141618"/>
+    <rect x="215" y="-33" width="400" height="66" fill="#f4f1ea"/>
+    <path d="M615 -33 C700 -33 740 -8 765 0 C740 8 700 33 615 33 Z" fill="#0083E0"/>
+    <polygon points="0,20.8 130,20.8 65,90.55 0,90.55" fill="#0083E0"/>
+    <polygon points="0,-20.8 130,-20.8 65,-90.55 0,-90.55" fill="#0083E0" opacity="0.45"/>
+  </g>
+  <g fill="#c8d0da" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
+    <text x="123" y="250" text-anchor="middle">Booster 150</text>
+    <text x="230" y="250" text-anchor="middle">65</text>
+    <text x="463" y="250" text-anchor="middle">Payload 400 · BT-80</text>
+    <text x="738" y="250" text-anchor="middle">Nose 150</text>
+    <text x="48" y="292">Fins: root 130 mm, tip 65 mm, span 69.75 mm, three at 120°. Motor AeroTech F44W-8.</text>
+  </g>
+</svg>
