@@ -1,6 +1,7 @@
 {
   "name": "arc-website",
   "version": "0.1.0",
+  "author": "Krish Bharadiya",
   "private": true,
   "scripts": {
     "dev": "next dev",

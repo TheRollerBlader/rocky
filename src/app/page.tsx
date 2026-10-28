@@ -63,7 +63,7 @@ export default function Home() {
         <div className="footer-inner">
           <div className="footer-brand">
             <strong>ROCKY 1 · ROCK HILL HIGH SCHOOL</strong>
-            <p>American Rocketry Challenge 2027 · Designed, engineered, and manufactured in Rock Hill, SC.</p>
+            <p>American Rocketry Challenge 2027 · Designed by Krish Bharadiya · Engineered and manufactured in Rock Hill, SC.</p>
           </div>
           <div className="footer-links">
             <a href="https://github.com/TheRollerBlader/rocky">Design files</a>

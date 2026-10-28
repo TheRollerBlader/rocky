@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   title: "Rocky — American Rocketry Challenge",
   description:
     "Rocky is a scratch-built rocket for the 2027 American Rocketry Challenge, tuned to 800 feet.",
+  authors: [{ name: "Krish Bharadiya" }],
+  creator: "Krish Bharadiya",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -8,6 +8,7 @@
 [![Motor: AeroTech F44W-8](https://img.shields.io/badge/Motor-AeroTech%20F44W--8-EF4444?style=for-the-badge&logo=rocket)](https://rocky-rocketry.netlify.app)
 [![Payload: Dual Eggs](https://img.shields.io/badge/Payload-Dual%20Hen's%20Eggs-8B5CF6?style=for-the-badge)](https://rocky-rocketry.netlify.app)
 [![Simulator: OpenRocket 24.12](https://img.shields.io/badge/Simulator-OpenRocket%2024.12-38BDF8?style=for-the-badge)](https://openrocket.info)
+[![Designer: Krish Bharadiya](https://img.shields.io/badge/Designer-Krish%20Bharadiya-0083E0?style=for-the-badge)](https://rocky-rocketry.netlify.app)
 [![Live Site](https://img.shields.io/badge/Live%20Site-rocky--rocketry.netlify.app-00C7B7?style=for-the-badge&logo=netlify)](https://rocky-rocketry.netlify.app)
 
 A scratch-built competition rocket for the **American Rocketry Challenge 2027**. Two eggs, an 800-foot target, and a flight that has to land between 37 and 40 seconds.
@@ -169,3 +170,12 @@ npm run dev
 ```
 
 The 3D model is generated from the STEP file with `npm run convert-rocket`. The published build is the page linked above: [rocky-rocketry.netlify.app](https://rocky-rocketry.netlify.app).
+
+---
+
+## Team
+
+- **Krish Bharadiya** — Designer
+- **Ammar Shaikh**
+- **Pranav Bhat**
+- **Abhinav Chintala**

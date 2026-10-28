@@ -514,6 +514,24 @@ a {
   font-weight: 500;
   letter-spacing: -0.045em;
   line-height: 1.05;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.crew-role {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(14px, 1.4vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0083e0;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 131, 224, 0.4);
+  background: rgba(0, 131, 224, 0.1);
 }
 
 /* -------------------------------------------------------------
