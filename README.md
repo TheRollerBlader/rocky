@@ -179,3 +179,4 @@ The 3D model is generated from the STEP file with `npm run convert-rocket`. The 
 - **Ammar Shaikh**
 - **Pranav Bhat**
 - **Abhinav Chintala**
+- **Arham Ahsan**
