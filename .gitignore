@@ -50,3 +50,9 @@ next-env.d.ts
 
 # OpenRocket output from simulations/run.py
 /simulations/results/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+scripts/capture_scroll.mjs
+scripts/debug_page.mjs
+scripts/test_mobile_render.mjs
