@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
+import { ThrustCurveVisualizer } from "./ThrustCurveVisualizer";
 
 const WINDS = [0, 5, 10, 15, 20];
 
@@ -347,6 +348,7 @@ export function Stats() {
           ticks={[0, 150, 300, 450, 600]}
           format={(value) => String(Math.round(value))}
         />
+        <ThrustCurveVisualizer className="plot-wide" />
       </div>
     </section>
   );
