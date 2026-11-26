@@ -6,9 +6,12 @@ calibrated thrust curves for the RK4 numerical flight simulator.
 """
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Tuple
+import base64
 import json
 from pathlib import Path
+import urllib.error
+import urllib.request
 
 
 @dataclass
@@ -152,3 +155,78 @@ class ThrustCurveAPIClient:
             "impulse_class": self.classify_impulse(impulse),
             "curve_points": data_points,
         }
+
+    def _post_json(self, endpoint: str, payload: Dict[str, Any], timeout: float = 10.0) -> Dict[str, Any]:
+        url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
+        body = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            url,
+            data=body,
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "User-Agent": "RockyRocketry/1.0",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+
+    def search_motors(
+        self,
+        common_name: Optional[str] = None,
+        impulse_class: Optional[str] = None,
+        diameter_mm: Optional[float] = None,
+        max_results: int = 20,
+    ) -> List[MotorSummary]:
+        """Queries ThrustCurve.org /search.json with local disk caching."""
+        query: Dict[str, Any] = {"maxResults": max_results}
+        if common_name:
+            query["commonName"] = common_name
+        if impulse_class:
+            query["impulseClass"] = impulse_class
+        if diameter_mm is not None:
+            query["diameter"] = diameter_mm
+
+        cache_key = f"search_{common_name or 'any'}_{impulse_class or 'any'}_{diameter_mm or 'any'}_{max_results}.json"
+        cache_path = self.cache_dir / cache_key
+        if self.enable_cache and cache_path.is_file():
+            return self.parse_search_results(json.loads(cache_path.read_text(encoding="utf-8")))
+
+        raw = self._post_json("search.json", query)
+        if self.enable_cache:
+            cache_path.write_text(json.dumps(raw), encoding="utf-8")
+        return self.parse_search_results(raw)
+
+    def download_motor_curve(self, motor_id: str, data_format: str = "RASP") -> Dict[str, Any]:
+        """Downloads and parses a certified .eng curve from ThrustCurve.org /download.json."""
+        cache_path = self.cache_dir / f"motor_{motor_id}_{data_format}.json"
+        if self.enable_cache and cache_path.is_file():
+            return json.loads(cache_path.read_text(encoding="utf-8"))
+
+        raw = self._post_json("download.json", {"motorIds": [motor_id], "format": data_format})
+        results = raw.get("results", [])
+        if not results:
+            raise ValueError(f"No thrust curve data returned for motor_id={motor_id}")
+
+        encoded = results[0].get("data", "")
+        if not encoded:
+            raise ValueError(f"Empty curve payload for motor_id={motor_id}")
+
+        eng_text = base64.b64decode(encoded).decode("utf-8", errors="replace")
+        parsed = self.parse_rasp_eng_text(eng_text)
+        parsed["motor_id"] = str(motor_id)
+        if self.enable_cache:
+            cache_path.write_text(json.dumps(parsed), encoding="utf-8")
+        return parsed
+
+    @staticmethod
+    def to_rk4_thrust_table(parsed_curve: Dict[str, Any]) -> List[Tuple[float, float]]:
+        """Extracts monotonic (time_s, thrust_n) samples with t=0 anchor for RK4 integration."""
+        points = [(float(t), max(0.0, float(f))) for t, f in parsed_curve.get("curve_points", [])]
+        if not points:
+            return []
+        points.sort(key=lambda p: p[0])
+        if points[0][0] > 0.0:
+            points.insert(0, (0.0, 0.0))
+        return points

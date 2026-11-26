@@ -1,3 +1,4 @@
+import base64
 import pytest
 from thrustcurve_api_client import ThrustCurveAPIClient, MotorSummary
 
@@ -63,3 +64,58 @@ F39 29.0 124.0 6-9-12 0.0385 0.0920 Cesaroni
         assert parsed["impulse_class"] == "F"
         assert parsed["max_thrust_n"] == 52.0
         assert len(parsed["curve_points"]) == 7
+
+    def test_search_and_download_with_disk_cache(self, tmp_path, monkeypatch):
+        client = ThrustCurveAPIClient(cache_dir=tmp_path, enable_cache=True)
+        calls = []
+
+        sample_eng = (
+            "; Test F39\n"
+            "F39 29.0 124.0 6-9-12 0.0385 0.0920 Cesaroni\n"
+            "0.10 45.0\n"
+            "0.50 48.0\n"
+            "1.90 0.0\n"
+        )
+        encoded_eng = base64.b64encode(sample_eng.encode("utf-8")).decode("ascii")
+
+        def fake_post(endpoint, payload, timeout=10.0):
+            calls.append((endpoint, payload))
+            if endpoint == "search.json":
+                return {
+                    "results": [
+                        {
+                            "motorId": "104",
+                            "manufacturer": "Cesaroni",
+                            "commonName": "F39",
+                            "impulseClass": "F",
+                            "totImpulseNs": 75.4,
+                            "avgThrustN": 39.2,
+                            "maxThrustN": 52.1,
+                            "burnTimeS": 1.92,
+                            "propWeightG": 38.5,
+                            "totalWeightG": 92.0,
+                            "diameter": 29.0,
+                            "length": 124.0,
+                        }
+                    ]
+                }
+            return {"results": [{"data": encoded_eng}]}
+
+        monkeypatch.setattr(client, "_post_json", fake_post)
+
+        # First call hits transport; second call reads from disk cache
+        motors = client.search_motors(common_name="F39", impulse_class="F")
+        assert len(motors) == 1
+        assert motors[0].motor_id == "104"
+
+        cached_motors = client.search_motors(common_name="F39", impulse_class="F")
+        assert len(cached_motors) == 1
+        assert len(calls) == 1
+
+        curve = client.download_motor_curve("104")
+        assert curve["motor_id"] == "104"
+        assert curve["impulse_class"] == "F"
+        rk4_table = client.to_rk4_thrust_table(curve)
+        assert rk4_table[0] == (0.0, 0.0)
+        assert rk4_table[-1] == (1.9, 0.0)
+        assert len(calls) == 2
