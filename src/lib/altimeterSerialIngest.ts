@@ -35,9 +35,21 @@ export interface SerialConnectionStatus {
 export type TelemetryListener = (frame: TelemetryFrame) => void;
 export type StatusListener = (status: SerialConnectionStatus) => void;
 
+interface WebSerialPortLike {
+  readable: ReadableStream<BufferSource> | null;
+  open(options: { baudRate: number }): Promise<void>;
+  close(): Promise<void>;
+}
+
+interface NavigatorWithSerial extends Navigator {
+  serial: {
+    requestPort(): Promise<WebSerialPortLike>;
+  };
+}
+
 export class AltimeterSerialIngest {
-  private port: any = null;
-  private reader: any = null;
+  private port: WebSerialPortLike | null = null;
+  private reader: ReadableStreamDefaultReader<string> | null = null;
   private isReading = false;
   private buffer = '';
   private baudRate: number;
@@ -52,7 +64,6 @@ export class AltimeterSerialIngest {
   private statusListeners: Set<StatusListener> = new Set();
 
   constructor(baudRate = 115200, groundElevationM = 0, seaLevelHpa = 1013.25) {
-    self.crypto; // ensure web API environment
     this.baudRate = baudRate;
     this.groundElevationM = groundElevationM;
     this.seaLevelHpa = seaLevelHpa;
@@ -85,8 +96,7 @@ export class AltimeterSerialIngest {
     }
 
     try {
-      // @ts-expect-error Web Serial navigator API
-      this.port = await navigator.serial.requestPort();
+      this.port = await (navigator as NavigatorWithSerial).serial.requestPort();
       await this.port.open({ baudRate: this.baudRate });
       this.isReading = true;
 
@@ -97,11 +107,12 @@ export class AltimeterSerialIngest {
 
       this.startReadLoop();
       return true;
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to connect to serial port';
       this.notifyStatus({
         connected: false,
         baudRate: this.baudRate,
-        error: err?.message || 'Failed to connect to serial port',
+        error: msg,
       });
       return false;
     }
